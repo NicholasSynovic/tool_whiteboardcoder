@@ -48,7 +48,8 @@ def llava(img: Image.Image) -> str:
     # autoregressively complete prompt
     output = model.generate(**inputs, max_new_tokens=100)
 
-    return processor.decode(output[0], skip_special_tokens=True)
+    response: str = processor.decode(output[0], skip_special_tokens=True)
+    return response.split("[/INST]")[-1].strip()
 
 
 def trocr(img: Image.Image) -> str:
@@ -108,7 +109,7 @@ def main(inputPath: Path, ocrModel: str) -> None:
             print("Lol")
             quit()
 
-    print("\n", text)
+    print("\n===\n", text)
 
 
 if __name__ == "__main__":
