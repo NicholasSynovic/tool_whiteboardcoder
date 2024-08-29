@@ -1,25 +1,55 @@
-from pathlib import Path
-
 import torch
 from PIL import Image
-from streamlit.runtime.uploaded_file_manager import UploadedFile
+
+# from streamlit.runtime.uploaded_file_manager import UploadedFile
 from torch import Tensor
 from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
     LlavaNextForConditionalGeneration,
     LlavaNextProcessor,
     TrOCRProcessor,
     VisionEncoderDecoderModel,
+    pipeline,
 )
 
-
-def readImage(image: Path | UploadedFile) -> Image.Image:
-    if image is UploadedFile:
-        return Image.open(fp=image.getbuffer()).convert(mode="RGB")
-    else:
-        return Image.open(fp=image).convert(mode="RGB")
+torch.random.manual_seed(42)
 
 
-def llava(img: Image.Image, device: str) -> str:
+def phi(text: str, device: str = "cuda", language: str = "python") -> str:
+    model = AutoModelForCausalLM.from_pretrained(
+        "microsoft/Phi-3.5-mini-instruct",
+        device_map=device,
+        torch_dtype="auto",
+        trust_remote_code=True,
+    )
+    tokenizer = AutoTokenizer.from_pretrained(
+        "microsoft/Phi-3.5-mini-instruct",
+    )
+
+    messages = [
+        {"role": "system", "content": f"Generate {language} code"},
+        {"role": "user", "content": text},
+    ]
+
+    pipe = pipeline(
+        "text-generation",
+        model=model,
+        tokenizer=tokenizer,
+    )
+
+    generation_args = {
+        "max_new_tokens": 500,
+        "return_full_text": False,
+        "temperature": 0.0,
+        "do_sample": False,
+    }
+
+    output = pipe(messages, **generation_args)
+    return output[0]["generated_text"]
+
+
+def llava(img: Image.Image, device: str = "cuda") -> str:
     processor = LlavaNextProcessor.from_pretrained(
         "llava-hf/llava-v1.6-mistral-7b-hf",
     )
@@ -55,7 +85,7 @@ def llava(img: Image.Image, device: str) -> str:
     return response.split("[/INST]")[-1].strip(" ")
 
 
-def trocr(img: Image.Image, device: str) -> str:
+def trocr(img: Image.Image, device: str = "cuda") -> str:
     processor: TrOCRProcessor = TrOCRProcessor.from_pretrained(
         "microsoft/trocr-base-handwritten",
     )

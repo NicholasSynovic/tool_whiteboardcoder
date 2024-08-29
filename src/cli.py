@@ -2,14 +2,20 @@ import warnings
 from pathlib import Path
 
 import click
-import torch
 from PIL import Image
 
 from src.code import phi
-from src.ocr import llava, readImage, trocr
+from src.ocr import llava, trocr
 
 warnings.filterwarnings(action="ignore")
-torch.random.manual_seed(42)
+
+
+def readImage(image: Path) -> Image.Image:
+    return Image.open(fp=image).convert(mode="RGB")
+    # if image is UploadedFile:
+    #     return Image.open(fp=image.getbuffer()).convert(mode="RGB")
+    # else:
+    # return Image.open(fp=image).convert(mode="RGB")
 
 
 @click.command()
@@ -56,16 +62,14 @@ def main(
     codeModel: str,
     progLanguage: str,
 ) -> None:
-    device: str = "cuda" if torch.cuda.is_available() else "cpu"
-
     img: Image.Image = readImage(image=inputPath)
 
     imgText: str
     match ocrModel.lower():
         case "trocr":
-            imgText = trocr(img=img, device=device)
+            imgText = trocr(img=img)
         case "llava":
-            imgText = llava(img=img, device=device)
+            imgText = llava(img=img)
         case _:
             print("Lol")
             quit()
@@ -75,7 +79,7 @@ def main(
     code: str
     match codeModel:
         case "phi":
-            code = phi(text=imgText, device=device, language=progLanguage)
+            code = phi(text=imgText, language=progLanguage)
         case _:
             print("Lol 2")
             quit()
