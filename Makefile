@@ -12,6 +12,9 @@ create-dev:
 	( \
 		. env/bin/activate; \
 		pip install -r requirements.txt; \
+		pip install torch torchvision torchaudio \
+			--index-url https://download.pytorch.org/whl/cu124; \
+		pip install flash-attn; \
 		poetry install; \
 		deactivate; \
 	)

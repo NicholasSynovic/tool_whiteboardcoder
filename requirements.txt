@@ -1,2 +1,4 @@
+ninja
+packaging
 poetry
 sphinx
