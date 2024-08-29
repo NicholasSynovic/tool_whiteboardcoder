@@ -34,7 +34,7 @@ def llava(img: Image.Image) -> str:
                 {"type": "image"},
                 {
                     "type": "text",
-                    "text": "Return only the text of the image",
+                    "text": "Return only the text of the image. Do not add any additional text.",  # noqa: E501
                 },
             ],
         },
@@ -48,7 +48,7 @@ def llava(img: Image.Image) -> str:
     # autoregressively complete prompt
     output = model.generate(**inputs, max_new_tokens=100)
 
-    print(processor.decode(output[0], skip_special_tokens=True))
+    return processor.decode(output[0], skip_special_tokens=True)
 
 
 def trocr(img: Image.Image) -> str:
@@ -108,7 +108,7 @@ def main(inputPath: Path, ocrModel: str) -> None:
             print("Lol")
             quit()
 
-    print(text)
+    print("\n", text)
 
 
 if __name__ == "__main__":
