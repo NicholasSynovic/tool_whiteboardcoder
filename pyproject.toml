@@ -12,6 +12,9 @@ classifiers = ["Development Status :: 1 - Planning"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+transformers = "^4.44.2"
+streamlit = "^1.38.0"
+pillow = "^10.4.0"
 
 
 [build-system]
