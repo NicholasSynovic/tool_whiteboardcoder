@@ -29,19 +29,13 @@ def llava(img: Image.Image) -> str:
 
     conversation = [
         {
-            "role": "system",
+            "role": "user",
             "content": [
+                {"type": "image"},
                 {
                     "type": "text",
                     "text": "Return only the content of the image",
                 },
-            ],
-        },
-        {
-            "role": "user",
-            "content": [
-                {"type": "image"},
-                {"type": "text", "text": "What is shown in this image?"},
             ],
         },
     ]
