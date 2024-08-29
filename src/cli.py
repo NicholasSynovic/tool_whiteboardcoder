@@ -81,7 +81,7 @@ def trocr(img: Image.Image, device: str) -> str:
     return generated_text
 
 
-def phi(text: str, device: str) -> str:
+def phi(text: str, device: str, language: str = "python") -> str:
     model = AutoModelForCausalLM.from_pretrained(
         "microsoft/Phi-3.5-mini-instruct",
         device_map=device,
@@ -93,7 +93,7 @@ def phi(text: str, device: str) -> str:
     )
 
     messages = [
-        {"role": "system", "content": "Generate python code"},
+        {"role": "system", "content": f"Generate {language} code"},
         {"role": "user", "content": text},
     ]
 
@@ -142,7 +142,21 @@ def phi(text: str, device: str) -> str:
     required=True,
     help="Code generation model to use",
 )
-def main(inputPath: Path, ocrModel: str, codeModel: str) -> None:
+@click.option(
+    "--language",
+    "progLanguage",
+    type=str,
+    required=False,
+    default="Python",
+    show_default=True,
+    help="Programming language to generate code from image",
+)
+def main(
+    inputPath: Path,
+    ocrModel: str,
+    codeModel: str,
+    progLanguage: str,
+) -> None:
     device: str = "cuda" if torch.cuda.is_available() else "cpu"
 
     img: Image.Image = Image.open(fp=inputPath).convert(mode="RGB")
@@ -162,12 +176,12 @@ def main(inputPath: Path, ocrModel: str, codeModel: str) -> None:
     code: str
     match codeModel:
         case "phi":
-            code = phi(text=imgText, device=device)
+            code = phi(text=imgText, device=device, language=progLanguage)
         case _:
             print("Lol 2")
             quit()
 
-    print(code)
+    print("\n===\n", code)
 
 
 if __name__ == "__main__":
