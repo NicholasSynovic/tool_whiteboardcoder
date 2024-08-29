@@ -29,6 +29,15 @@ def llava(img: Image.Image) -> str:
 
     conversation = [
         {
+            "role": "system",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "Return only the content of the image",
+                },
+            ],
+        },
+        {
             "role": "user",
             "content": [
                 {"type": "image"},
@@ -61,7 +70,7 @@ def trocr(img: Image.Image) -> str:
 
     pixel_values: Tensor = processor(img, return_tensors="pt").pixel_values
 
-    generated_ids: Tensor = model.generate(pixel_values)
+    generated_ids: Tensor = model.generate(pixel_values, max_new_tokens=100)
 
     generated_text: str = processor.batch_decode(
         generated_ids,
