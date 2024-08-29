@@ -28,7 +28,8 @@ def trOCR_inferenceImage(uf: UploadedFile) -> str:
     generated_ids: Tensor = model.generate(pixel_values)
 
     generated_text: str = processor.batch_decode(
-        generated_ids, skip_special_tokens=True
+        generated_ids,
+        skip_special_tokens=True,
     )[0]
 
     return generated_text
