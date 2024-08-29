@@ -1,3 +1,4 @@
+import warnings
 from pathlib import Path
 
 import click
@@ -7,6 +8,8 @@ from transformers import (  # DonutProcessor,
     TrOCRProcessor,
     VisionEncoderDecoderModel,
 )
+
+warnings.filterwarnings(action="ignore")
 
 
 def trocr(img: Image.Image) -> str:
