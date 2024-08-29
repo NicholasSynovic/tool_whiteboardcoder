@@ -34,7 +34,7 @@ def llava(img: Image.Image) -> str:
                 {"type": "image"},
                 {
                     "type": "text",
-                    "text": "Return only the content of the image",
+                    "text": "Return only the text of the image",
                 },
             ],
         },
