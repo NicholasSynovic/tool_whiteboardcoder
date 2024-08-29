@@ -78,9 +78,7 @@ def donut_inferenceImage(uf: UploadedFile) -> str:
 
 def main() -> None:
     st.markdown(body="# Whiteboard Code")
-    st.markdown(
-        body="> Tool to convert written psuedo-code into actual code!"
-    )  # noqa: E501
+    st.markdown(body="> Tool to convert written psuedo-code into actual code!")
     st.divider()
 
     st.markdown("## Image Picker")
