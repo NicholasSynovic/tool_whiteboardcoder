@@ -4,8 +4,7 @@ from pathlib import Path
 import click
 from PIL import Image
 
-from src.code import phi
-from src.ocr import llava, trocr
+from src.models import llava, phi, trocr
 
 warnings.filterwarnings(action="ignore")
 
