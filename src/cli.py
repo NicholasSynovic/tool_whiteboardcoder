@@ -56,11 +56,15 @@ def trocr(img: Image.Image) -> str:
 def main(inputPath: Path, ocrModel: str) -> None:
     img: Image.Image = Image.open(fp=inputPath).convert(mode="RGB")
 
+    text: str
     match ocrModel.lower():
         case "trocr":
-            trocr(img=img)
+            text = trocr(img=img)
         case _:
             print("Lol")
+            quit()
+
+    print(text)
 
 
 if __name__ == "__main__":

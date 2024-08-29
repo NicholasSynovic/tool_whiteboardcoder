@@ -44,7 +44,7 @@ def donut_inferenceImage(uf: UploadedFile) -> str:
     )
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    model.to(device)
+    model.to("device")
     # load document image
     image: Image.Image = Image.open(fp=uf).convert("RGB")
 
