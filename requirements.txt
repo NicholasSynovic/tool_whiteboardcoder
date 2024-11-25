@@ -1,4 +1,2 @@
-ninja
-packaging
 poetry
-sphinx
+pyinstaller

@@ -1,9 +1,8 @@
 build:
+	git --no-pager tag | tail -n 1 | xargs -I % poetry version %
+	poetry version --short > src/_version
 	poetry build
 	pip install dist/*.tar.gz
-
-build-docs:
-	sphinx-build --builder html src-docs build-docs
 
 create-dev:
 	pre-commit install
@@ -12,12 +11,15 @@ create-dev:
 	( \
 		. env/bin/activate; \
 		pip install -r requirements.txt; \
-		pip install torch torchvision torchaudio \
-			--index-url https://download.pytorch.org/whl/cu124; \
-		pip install flash-attn; \
 		poetry install; \
 		deactivate; \
 	)
 
-create-docs:
-	sphinx-apidoc src --output-dir src-docs --maxdepth 100 --separate
+package:
+	pyinstaller --clean \
+		--onefile \
+		--add-data ./src/_version:. \
+		--workpath ./pyinstaller \
+		--name src \
+		--hidden-import src \
+		src/main.py
